@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Faculty Dashboard</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+<style>
+body {
+    font-family: "Poppins", sans-serif;
+    background-color: #f7f9fb;
+    overflow-x: hidden;
+}
+
+/* Sidebar */
+.sidebar {
+    height: 100vh;
+    background-color: #004d66;
+    color: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 240px;
+    transition: all 0.8s ease;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.sidebar.collapsed {
+    width: 70px;
+}
+
+.sidebar .brand {
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-align: center;
+    padding: 1rem;
+    background-color: #006d87;
+    white-space: nowrap;
+    transition: all 0.8s;
+}
+
+.sidebar a {
+    display: flex;
+    align-items: center;
+    color: #d9e6eb;
+    text-decoration: none;
+    padding: 12px 20px;
+    font-size: 0.95rem;
+    transition: 0.3s;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+    background-color: #00bcd4;
+    color: #fff;
+    border-radius: 5px;
+}
+
+.sidebar i {
+    margin-right: 10px;
+    font-size: 1.2rem;
+    min-width: 25px;
+    text-align: center;
+}
+
+.sidebar.collapsed a span {
+    display: none;
+}
+
+.sidebar.collapsed .brand {
+    font-size: 1.1rem;
+    padding: 0.8rem 0;
+}
+
+/* Topbar */
+/* CORRECTED CSS (REPLACE EXISTING) */
+
+/* Topbar */
+.topbar {
+    position: fixed;
+    top: 0;
+    /* 1. Start the topbar at the width of the sidebar */
+    left: 240px; 
+    /* 2. Calculate the topbar width: 100% minus the sidebar width */
+    width: calc(100% - 240px); 
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 25px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    /* Keep the transition for a smooth effect */
+    transition: all 0.8s ease; 
+    z-index: 1010;
+}
+
+/* Adjust topbar when sidebar is collapsed (Desktop) */
+.sidebar.collapsed ~ .topbar {
+    left: 70px; /* Start position changes to 70px */
+    width: calc(100% - 70px); /* Width expands to fill the rest */
+}
+
+/* Main Content */
+.main-content {
+    /* Initial margin matches the sidebar width */
+    margin-left: 240px; 
+    padding: 30px;
+    /* Ensure content is below the fixed topbar */
+    padding-top: 80px; 
+    transition: margin-left 0.8s ease;
+}
+
+/* Adjust main content when sidebar is collapsed (Desktop) */
+.sidebar.collapsed ~ .main-content {
+    margin-left: 70px;
+}
+
+/* Media Query Fix (for mobile view) */
+@media (max-width: 992px) {
+    /* ... other media query rules remain the same ... */
+
+    .topbar,
+    .sidebar.collapsed ~ .topbar {
+        left: 0; /* Topbar spans full width */
+        width: 100%;
+        margin-left: 0; /* Remove margin property */
+    }
+
+    .main-content,
+    .sidebar.collapsed ~ .main-content {
+        margin-left: 0; /* Main content spans full width */
+        padding-top: 80px;
+    }
+}
+.card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .document-table {
+            margin-bottom: 0;
+        }
+
+        .document-table thead th {
+            background-color: #f7f9fb; 
+            color: #555;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .document-table tbody td {
+            padding: 15px;
+            font-size: 0.9rem;
+        }
+
+        .document-icon-wrapper {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px; /* Slightly rounded squares */
+            background-color: #00bcd4; /* Example background */
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        /* Specific document icon colors */
+        .doc-icon-pdf { background-color: #dc3545; } /* Red */
+        .doc-icon-doc { background-color: #007bff; } /* Blue */
+        .doc-icon-xls { background-color: #28a745; } /* Green */
+        .doc-icon-img { background-color: #ffc107; } /* Yellow */
+
+
+        /* Search Input */
+        .search-box .form-control {
+            border-radius: 8px 0 0 8px;
+            border-right: none;
+        }
+        .search-box .input-group-text {
+            background-color: #fff;
+            border-radius: 0 8px 8px 0;
+            border-left: 1px solid #ddd;
+        }
+
+        /* Bulk action buttons */
+        .bulk-actions-container .btn {
+            border-radius: 8px;
+            padding: 8px 15px;
+        }
+        .bulk-actions-container .btn-primary {
+            background-color: #6f42c1; /* Purple for select all */
+            border-color: #6f42c1;
+        }
+        .bulk-actions-container .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+
+
+footer {
+    text-align: center;
+    margin-top: 30px;
+    color: #777;
+    font-size: 0.9rem;
+}
+
+/* Sidebar logo */
+.sidebar .brand {
+ background-color: #004d66;
+ text-align: center;
+padding: 1rem;
+ white-space: nowrap;
+ transition: all 0.8s;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+}
+
+.sidebar-logo {
+ /* Increased max-width and max-height for a larger logo */
+ max-width: 100%;
+ max-height: 200px; /* Increased from 70px to 100px */
+ height: auto;
+ width: auto;
+ background-color: transparent;
+/* Added transition for smooth size change */
+ transition: max-width 0.8s ease; 
+}
+
+/* Profile hover tooltip */
+.profile-icon {
+    position: relative;
+    display: inline-block;
+}
+
+.faculty-name-tooltip {
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #004d66;
+    color: #fff;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.profile-icon:hover .faculty-name-tooltip {
+    opacity: 1;
+    visibility: visible;
+    bottom: -35px;
+}
+
+/* Optional arrow for tooltip */
+.faculty-name-tooltip::after {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #004d66 transparent;
+}
+</style>
+</head>
+<body>
+<div class="sidebar" id="sidebar">
+    <div class="brand logo-container">
+        <img src="../../Student/Images/11.png" alt="University Logo" class="sidebar-logo">
+    </div>
+    <a href="dashboard.html" ><i class="bi bi-speedometer2"></i> <span>Dashboard</span></a>
+    <a href="students.html" ><i class="bi bi-person-badge"></i> <span>Student</span></a>
+    <a href="Documents.html" class="active"><i class="bi bi-mortarboard"></i> <span>Documents</span></a>
+    <a href="Attandance.html"><i class="bi bi-people-fill"></i> <span>Attandance</span></a>
+    <a href="class.html"><i class="bi bi-journal-check"></i> <span>Class</span></a>
+</div>
+
+<!-- Topbar -->
+<div class="topbar">
+  <div class="d-flex align-items-center">
+    <i class="bi bi-list fs-3 me-3" id="toggle-btn" style="cursor:pointer;"></i>
+    <h5>Welcome, Prof.Abhishek Kumar</h5>
+  </div>
+
+  <div class="d-flex align-items-center">
+    <!-- Notifications -->
+    <div class="dropdown me-3">
+      <i class="bi bi-bell fs-4 text-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;"></i>
+      <ul class="dropdown-menu dropdown-menu-end shadow">
+        <li><h6 class="dropdown-header">Notifications</h6></li>
+        <li><a class="dropdown-item" href="#">New assignment uploaded</a></li>
+        <li><a class="dropdown-item" href="#">Exam schedule updated</a></li>
+        <li><a class="dropdown-item" href="#">Meeting at 3 PM</a></li>
+      </ul>
+    </div>
+    <!-- Profile -->
+    <div class="dropdown">
+      <i class="bi bi-person-circle fs-4 text-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;"></i>
+      <ul class="dropdown-menu dropdown-menu-end shadow">
+        <li><h6 class="dropdown-header">Dr. Prince Rathod</h6></li>
+        <li><a class="dropdown-item" href="#">View Profile</a></li>
+        <li><a class="dropdown-item" href="#">Settings</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item text-danger" href="#">Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+         <div class="main-content">
+    
+    <div class="card p-4 shadow-sm mb-4">
+        
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+            <h5 class="fw-bold mb-0" style="color: #004d66;">Document List</h5>
+            <button class="btn btn-primary d-flex align-items-center">
+                <i class="bi bi-plus-lg me-2"></i> Add New Document
+            </button>
+        </div>
+
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 border-bottom pb-3">
+            <div class="d-flex align-items-center me-3 mb-2">
+                <select class="form-select form-select-sm me-2" style="width: 70px;">
+                    <option selected>10</option>
+                    <option value="25">25</option>
+                </select>
+                <span class="text-muted">Showing 1 to 3 of 5 entries</span>
+            </div>
+            
+            <div class="search-box mb-2">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search Documents..." aria-label="Search" style="max-width: 250px;">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 document-card-grid">
+
+            <div class="col-12">
+                <div class="document-item-card p-3 d-flex align-items-center justify-content-between border rounded-3 shadow-sm doc-card-pdf">
+                    <div class="d-flex align-items-center">
+                        <div class="document-icon-wrapper doc-icon-pdf me-3"><i class="bi bi-file-earmark-pdf"></i></div>
+                        <div>
+                            <div class="fw-bold text-dark">B.Tech Midterm Exam Timetable</div>
+                            <small class="text-muted d-block">For: Class 1 / All Sections</small>
+                            <span class="badge bg-danger">PDF</span>
+                        </div>
+                    </div>
+                    
+                    <div class="d-none d-md-block text-end">
+                        <small class="d-block text-secondary">Uploaded By: Faculty Admin</small>
+                        <small class="d-block text-secondary">Date: 2025/10/09</small>
+                    </div>
+
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Actions <i class="bi bi-chevron-down ms-1"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-download me-2"></i> Download</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-eye me-2"></i> View</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-trash me-2"></i> Delete</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="document-item-card p-3 d-flex align-items-center justify-content-between border rounded-3 shadow-sm doc-card-doc">
+                    <div class="d-flex align-items-center">
+                        <div class="document-icon-wrapper doc-icon-doc me-3"><i class="bi bi-file-earmark-text"></i></div>
+                        <div>
+                            <div class="fw-bold text-dark">Web Technologies Lecture 5 Notes</div>
+                            <small class="text-muted d-block">For: Class 2 / Section A</small>
+                            <span class="badge bg-info text-dark">DOCX</span>
+                        </div>
+                    </div>
+                    
+                    <div class="d-none d-md-block text-end">
+                        <small class="d-block text-secondary">Uploaded By: Faculty Admin</small>
+                        <small class="d-block text-secondary">Date: 2025/10/05</small>
+                    </div>
+
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Actions <i class="bi bi-chevron-down ms-1"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-download me-2"></i> Download</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-eye me-2"></i> View</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-trash me-2"></i> Delete</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="document-item-card p-3 d-flex align-items-center justify-content-between border rounded-3 shadow-sm doc-card-xls">
+                    <div class="d-flex align-items-center">
+                        <div class="document-icon-wrapper doc-icon-xls me-3"><i class="bi bi-file-earmark-spreadsheet"></i></div>
+                        <div>
+                            <div class="fw-bold text-dark">Master Grade Sheet Template</div>
+                            <small class="text-muted d-block">For: Faculty / Internal Use</small>
+                            <span class="badge bg-success">XLSX</span>
+                        </div>
+                    </div>
+                    
+                    <div class="d-none d-md-block text-end">
+                        <small class="d-block text-secondary">Uploaded By: Head of Dept.</small>
+                        <small class="d-block text-secondary">Date: 2025/09/15</small>
+                    </div>
+
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Actions <i class="bi bi-chevron-down ms-1"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-download me-2"></i> Download</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-eye me-2"></i> View</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-trash me-2"></i> Delete</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        
+        <div class="d-flex justify-content-end mt-4">
+            <nav aria-label="Page navigation">
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+
+         
+        <footer>Copyright © 2025 | BlueHaven University</footer>
+    </div>
+    
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// Sidebar toggle
+const toggleBtn = document.getElementById("toggle-btn");
+        const sidebar = document.getElementById("sidebar");
+
+        toggleBtn.addEventListener("click", () => {
+            if (window.innerWidth <= 992) {
+                sidebar.classList.toggle("show");
+            } else {
+                sidebar.classList.toggle("collapsed");
+            }
+        });
+        
+        // Highlight active link
+        const links = document.querySelectorAll(".sidebar a");
+        links.forEach(link => {
+            // Check if the link's href matches the current page's filename
+            if (window.location.pathname.includes(link.getAttribute('href'))) {
+                links.forEach(l => l.classList.remove("active")); // Remove active from any other link
+                link.classList.add("active"); // Add active to the current page's link
+            }
+        });
+
+        // ==================== CHECKBOX SELECT ALL LOGIC ====================
+        const selectAllCheckbox = document.getElementById('selectAllDocs');
+        const rowCheckboxes = document.querySelectorAll('.row-checkbox');
+
+        selectAllCheckbox.addEventListener('change', function() {
+            rowCheckboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+        });
+
+        rowCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (!this.checked) {
+                    selectAllCheckbox.checked = false;
+                } else {
+                    const allChecked = Array.from(rowCheckboxes).every(cb => cb.checked);
+                    selectAllCheckbox.checked = allChecked;
+                }
+            });
+        });
+
+
+</script>
+</body>
+</html>
