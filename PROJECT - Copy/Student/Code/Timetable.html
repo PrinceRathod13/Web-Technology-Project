@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Timetable | Dashboard</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <style>
+    /* NAVBAR */
+    .custom-nav .nav-link {
+      position: relative;
+      padding-bottom: 8px;
+      transition: color 0.3s;
+      color: inherit;
+    }
+    .custom-nav .nav-link::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background-color: #00e6ac;
+      transition: width 0.3s ease, left 0.3s ease;
+      border-radius: 2px;
+    }
+    .custom-nav .nav-link:hover::after,
+    .custom-nav .nav-link.active::after {
+      width: 100%;
+      left: 0;
+    }
+
+    /* TIMETABLE */
+    .timetable-container {
+      max-width: 1200px;
+      margin: 30px auto;
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      overflow-x: auto; /* allow horizontal scroll on small screens */
+    }
+    .timetable-container table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 0.85em;
+      min-width: 900px; /* force scroll on small screens */
+    }
+    .timetable-container th, .timetable-container td {
+      border: 1px solid #ddd;
+      padding: 6px;
+      text-align: center;
+    }
+    .timetable-container th {
+      background-color: #e0e0e0;
+      font-weight: bold;
+    }
+
+    /* HEADER IMAGE */
+    .timetable-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 20px;
+    }
+    .timetable-header img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .footer-table td {
+      border: none !important;
+      padding-top: 10px;
+      font-weight: bold;
+      font-size: large;
+    }
+
+    @media(max-width: 768px){
+      .timetable-container h2, .timetable-container h3 {
+        font-size: 1.2rem;
+      }
+      .timetable-container p {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Branding Top Bar -->
+<div class="bg-white py-2 shadow-sm">
+  <div class="container-fluid d-flex justify-content-between align-items-center flex-wrap px-4">
+    <div class="d-flex align-items-center">
+      <img src="../Images/Uni.png" alt="University Logo" class="img-fluid" style="max-height: 80px;" />
+    </div>
+    <div class="d-flex align-items-center mt-2 mt-md-0">
+      <img src="../Images/Profile.png" class="rounded-circle me-2" width="40" height="40" alt="User" />
+      <span><i>Hi,</i> <strong>Ajay Kumar</strong></span>
+    </div>
+  </div>
+</div>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg text-white navbar-dark bg-dark sticky-top shadow-sm">
+  <div class="container-fluid px-4">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNavbar">
+      <ul class="navbar-nav custom-nav mx-auto gap-lg-3 flex-wrap">
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center gap-2" href="Home.html"><i class="bi bi-house-door"></i> Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center gap-2" href="Profile.html"><i class="bi bi-person-circle"></i> My Profile</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle active d-flex align-items-center gap-2" href="#" id="timetableDropdown" data-bs-toggle="dropdown">
+            <i class="bi bi-calendar-event"></i> Timetable / Attendance
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark rounded-3 shadow">
+            <li><a class="dropdown-item" href="Timetable.html"><i class="bi bi-clock"></i> View Timetable</a></li>
+            <li><a class="dropdown-item" href="Attandance.html"><i class="bi bi-clipboard-check"></i> Attendance Report</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="LMS.html"><i class="bi bi-journal-bookmark"></i> LMS</a></li>
+        <li class="nav-item"><a class="nav-link" href="Feedback.html"><i class="bi bi-palette"></i> Feedback</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"><i class="bi bi-file-earmark-text"></i> Exam</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Exam Schedule</a></li>
+            <li><a class="dropdown-item" href="#">Results</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"><i class="bi bi-bus-front"></i> Transport</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Bus Route</a></li>
+            <li><a class="dropdown-item" href="#">Bus Pass</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Timetable Header -->
+<div class="timetable-container">
+  <div class="timetable-header">
+    <img src="../Images/Uni.png" alt="University Logo" class="img-fluid" style="max-width: 200px;">
+    <div>
+      <h2>Blue Haven University</h2>
+      <h3>Department of Computer Engineering</h3>
+      <p>
+        Class Rooms: MB301, MB304, MB305, MA309, MB310<br>
+        Semester: I | Division: A
+      </p>
+    </div>
+  </div>
+
+  <!-- Responsive Table -->
+  <div class="table-responsive mt-4">
+    <table class="table table-bordered text-center">
+      <thead class="table-light">
+        <tr>
+          <th>Sr. No.</th>
+          <th colspan="2">TIME</th>
+          <th colspan="2">MONDAY</th>
+          <th colspan="2">TUESDAY</th>
+          <th colspan="2">WEDNESDAY</th>
+          <th colspan="2">THURSDAY</th>
+          <th colspan="2">FRIDAY</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>09:30 to 10:30</td>
+          <td rowspan="2">09:30 to 11:00</td>
+          <td colspan="2">DMS - TB<br>MB310</td>
+          <td colspan="2">QLA - VA<br>PCSSHA</td>
+          <td>A<br>DS<br>SM<br>MA202</td>
+          <td>B<br>AJT<br>KK<br>MA203</td>
+          <td colspan="2">LIBRARY</td>
+          <td colspan="2" style="background-color: orange;">WT - KT<br>MA-308</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>10:30 to 11:30</td>
+          <td colspan="2">DS-SM<br>MB-310</td>
+          <td colspan="2">AJT-KK<br>MB-305</td>
+          <td colspan="2">-</td>
+          <td colspan="2">LIBRARY</td>
+          <td colspan="2">LIBRARY</td>
+        </tr>
+        <!-- Add the rest of your rows here -->
+       <tr>
+      <td>3</td>
+      <td>11:30 to 12:30</td>
+      <td>11:00 to 12:30</td>
+      <td colspan="2">WT-KT<br>MB-310</td>
+      <td colspan="2">DS-SM<br>MB-305</td>
+      <td colspan="2">LIBRARY</td>
+      <td colspan="2">AJT-KK<br>MB-305</td>
+      <td colspan="2">DS-SM <br>MA-301</td>
+    </tr>
+    <tr>
+      <th></th>
+      <th colspan="2">12:30 to 1:30</th>
+      <th colspan="10">LUNCH BREAK</th>
+    </tr>
+
+    <tr>
+      <td>4</td>
+      <td>01:30 to 02:30</td>
+      <td rowspan="2">01:30 to 03:00</td>
+      <td >A<br>PS<br>DV<br>MB310</td>
+      <td>B<br>DS<br>SM<br>MB203</td>
+      <td colspan="2">DMS - TB<br>MB301</td>
+      <td colspan="2">WT - KT<br>MB304</td>
+      <td>A<br>AJT<br>KK<br>MB010</td>
+      <td>B<br>DMS<br>TB<br>MA202</td>
+      <td>A<br>DMS<br>TB<br>MA202</td>
+      <td>B<br>WT<br>KT<br>MC214</td>
+    </tr>
+
+    <tr>
+      <td>5</td>
+      <td>2:30 to 3:25</td>
+      <td colspan="2">-</td>
+      <td colspan="2">-</td>
+      <td colspan="2">PS-DV<br>MB-304</td>
+      <td colspan="2">-</td>
+      <td colspan="2">-</td>
+    </tr>
+
+    <tr>
+      <td>6</td>
+      <td>3:25 to 4:20</td>
+      <td>3:00 TO 4:20</td>
+      <td colspan="2">AJT-KK<br>MB-310</td>
+      <td>A<br>WT<br>KT<br>MC-214</td>
+      <td>B<br>PS<br>DV<br>MB-301</td>
+      <td colspan="2">DMS-TB<br>MB-304</td>
+      <td colspan="2">PS-DV<br>MB-301</td>
+      <td colspan="2">PS-DV<br>MA-309</td>
+    </tr>
+   
+</tboady>
+</table>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-black text-white pt-3 pb-1">
+  <div class="container">
+    <div class="row">
+
+      <!-- University Branding & Legal Links -->
+      <div class="col-md-3 mb-4">
+        <img src="../Images/Uni.png" alt="University of Cambridge Logo" width="180" class="mb-3">
+        <p class="text-warning small">&copy; 2025 University of Blue Haven</p>
+        <ul class="list-unstyled small">
+          <li><a href="#" class="text-white text-decoration-none d-block py-1">University A–Z</a></li>
+          <li><a href="#" class="text-white text-decoration-none d-block py-1">Contact the University</a></li>
+          <li><a href="#" class="text-white text-decoration-none d-block py-1">Accessibility</a></li>
+          <li><a href="#" class="text-white text-decoration-none d-block py-1">Freedom of information</a></li>
+          <li><a href="#" class="text-white text-decoration-none d-block py-1">Terms and conditions</a></li>
+        </ul>
+      </div>
+
+      <!-- Study at Cambridge -->
+      <div class="col-md-3 mb-4 border-start border-secondary ps-4">
+        <h6 class="text-muted">Study at Blue Havne</h6>
+        <ul class="list-unstyled small">
+          <li><a href="#" class="text-white text-decoration-none d-block py-1">Undergraduate</a></li>
+          <li><a href="#" class="text-white text-decoration-none d-block py-1">Postgraduate</a></li>
+          <li><a href="#" class="text-white text-decoration-none d-block py-1">International students</a></li>
+          <li><a href="#" class="text-white text-decoration-none d-block py-1">Continuing education</a></li>
+          <li><a href="#" class="text-white text-decoration-none d-block py-1">Executive and professional education</a></li>
+          <li><a href="#" class="text-white text-decoration-none d-block py-1">Courses in education</a></li>
+        </ul>
+      </div>
+
+      <!-- About the University -->
+      <div class="col-md-3 mb-4 border-start border-secondary ps-4">
+        <h6 class="text-muted">About the University</h6>
+        <ul class="list-unstyled small">
+          <li><a href="#" class="text-white text-decoration-none d-block py-1">How the University and Colleges work</a></li>
+          <li><a href="#" class="text-white text-decoration-none d-block py-1">News</a></li>
+          <li><a href="#" class="text-white text-decoration-none d-block py-1">Events</a></li>
+          <li><a href="#" class="text-white text-decoration-none d-block py-1">Map</a></li>
+          <li><a href="#" class="text-white text-decoration-none d-block py-1">Jobs</a></li>
+          <li><a href="#" class="text-white text-decoration-none d-block py-1">Visiting the University</a></li>
+        </ul>
+      </div>
+
+      <!-- Research at Cambridge -->
+      <div class="col-md-3 mb-4 border-start border-secondary ps-4">
+        <h6 class="text-muted">Research at Cambridge</h6>
+        <ul class="list-unstyled small">
+          <li><a href="#" class="text-white text-decoration-none d-block py-1">Research news</a></li>
+          <li><a href="#" class="text-white text-decoration-none d-block py-1">Spotlight on...</a></li>
+          <li><a href="#" class="text-white text-decoration-none d-block py-1">About research at Cambridge</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
